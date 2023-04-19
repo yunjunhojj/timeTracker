@@ -122,7 +122,8 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: calc(100vh - 4rem);
+
+  margin-top: 48px;
 `;
 
 const PomodoroCouterContainer = styled.div`
