@@ -9,18 +9,16 @@ import TimetablePage from "./pages/TimetablePage";
 
 function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<PomodoroTimerPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/todo" element={<ToDoListPage />} />
-          <Route path="/timetable" element={<TimetablePage />} />
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<PomodoroTimerPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/todo" element={<ToDoListPage />} />
+        <Route path="/timetable" element={<TimetablePage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
