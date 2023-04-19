@@ -7,10 +7,12 @@ import ToDoListPage from "./pages/ToDoListPage";
 import DashboardPage from "./pages/DashboardPage";
 import TimetablePage from "./pages/TimetablePage";
 import NotFoundPage from "./pages/NotFoundPage";
+import TopNavigation from "./components/layouts/TopNavigation";
 
 function App() {
   return (
     <BrowserRouter>
+      <TopNavigation />
       <Routes>
         <Route path="/" element={<PomodoroTimerPage />} />
         <Route path="/login" element={<LoginPage />} />
