@@ -51,7 +51,7 @@ const PomodoroTimerPage = () => {
       clearInterval(interval);
     }
     return () => clearInterval(interval);
-  }, [isActive, isResting, timeLeft]);
+  }, [focusTime, isActive, isResting, restTime, timeLeft]);
 
   const formatTime = (time) => {
     const minutes = Math.floor(time / 60);
