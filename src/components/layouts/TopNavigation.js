@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 const TopNavigation = () => {
+  const [isLogged, setIsLogged] = useState(false);
+
   const NavBar = styled.nav`
     display: flex;
     justify-content: space-between;
@@ -10,6 +12,12 @@ const TopNavigation = () => {
     padding: 1rem;
     background-color: #0077cc;
     color: #fff;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      justify-content: center;
+      height: auto;
+    }
   `;
 
   const NavTitle = styled.h1`
@@ -21,6 +29,12 @@ const TopNavigation = () => {
     list-style: none;
     margin: 0;
     padding: 0;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: center;
+      margin-top: 1rem;
+    }
   `;
 
   const NavLink = styled.li`
@@ -34,6 +48,10 @@ const TopNavigation = () => {
         text-decoration: underline;
       }
     }
+
+    @media (max-width: 768px) {
+      margin: 0.5rem 0;
+    }
   `;
 
   return (
@@ -41,10 +59,10 @@ const TopNavigation = () => {
       <NavTitle>Time Tracker</NavTitle>
       <NavLinks>
         <NavLink>
-          <Link to="/">Pomodoro Timer</Link>
+          <Link to="/">Pomodoro</Link>
         </NavLink>
         <NavLink>
-          <Link to="/todo">To-Do List</Link>
+          <Link to="/todo">To-Do</Link>
         </NavLink>
         <NavLink>
           <Link to="/timetable">Timetable</Link>
@@ -52,12 +70,15 @@ const TopNavigation = () => {
         <NavLink>
           <Link to="/dashboard">Dashboard</Link>
         </NavLink>
-        <NavLink>
-          <Link to="/login">Log In</Link>
-        </NavLink>
-        <NavLink>
-          <Link to="/signup">Sign Up</Link>
-        </NavLink>
+        {isLogged ? (
+          <NavLink>
+            <Link to="/login">Log In</Link>
+          </NavLink>
+        ) : (
+          <NavLink>
+            <Link to="/">Log Out</Link>
+          </NavLink>
+        )}
       </NavLinks>
     </NavBar>
   );
