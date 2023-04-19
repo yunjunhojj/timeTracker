@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 
 const TopNavigation = () => {
   const [isLogged, setIsLogged] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
 
   const NavBar = styled.nav`
     display: flex;
@@ -54,32 +56,50 @@ const TopNavigation = () => {
     }
   `;
 
+  useEffect(() => {
+    const viewPortWidth = window.innerWidth;
+    if (viewPortWidth < 768) {
+      setIsMobile(true);
+    } else {
+      setIsMobile(false);
+    }
+  }, []);
+
   return (
     <NavBar>
-      <NavTitle>Time Tracker</NavTitle>
-      <NavLinks>
-        <NavLink>
-          <Link to="/">Pomodoro</Link>
-        </NavLink>
-        <NavLink>
-          <Link to="/todo">To-Do</Link>
-        </NavLink>
-        <NavLink>
-          <Link to="/timetable">Timetable</Link>
-        </NavLink>
-        <NavLink>
-          <Link to="/dashboard">Dashboard</Link>
-        </NavLink>
-        {isLogged ? (
+      {isMobile ? (
+        <NavTitle onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          Time Tracker {isMenuOpen ? "▲" : " ▼"}
+        </NavTitle>
+      ) : (
+        <NavTitle>Time Tracker</NavTitle>
+      )}
+
+      {isMenuOpen ? (
+        <NavLinks>
           <NavLink>
-            <Link to="/login">Log In</Link>
+            <Link to="/">Pomodoro</Link>
           </NavLink>
-        ) : (
           <NavLink>
-            <Link to="/">Log Out</Link>
+            <Link to="/todo">To-Do</Link>
           </NavLink>
-        )}
-      </NavLinks>
+          <NavLink>
+            <Link to="/timetable">Timetable</Link>
+          </NavLink>
+          <NavLink>
+            <Link to="/dashboard">Dashboard</Link>
+          </NavLink>
+          {isLogged ? (
+            <NavLink>
+              <Link to="/login">Log In</Link>
+            </NavLink>
+          ) : (
+            <NavLink>
+              <Link to="/">Log Out</Link>
+            </NavLink>
+          )}
+        </NavLinks>
+      ) : null}
     </NavBar>
   );
 };
