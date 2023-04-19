@@ -6,6 +6,7 @@ import PomodoroTimerPage from "./pages/PomodoroTimerPage";
 import ToDoListPage from "./pages/ToDoListPage";
 import DashboardPage from "./pages/DashboardPage";
 import TimetablePage from "./pages/TimetablePage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/todo" element={<ToDoListPage />} />
         <Route path="/timetable" element={<TimetablePage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );
