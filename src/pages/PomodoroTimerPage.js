@@ -78,7 +78,7 @@ const PomodoroTimerPage = () => {
             min={1}
             onChange={(e) => setFocusTime(e.target.value * 60)}
           />
-          <span>Set focus duration</span>
+          <span>Set focus time</span>
         </label>
         <label>
           <input
@@ -87,7 +87,7 @@ const PomodoroTimerPage = () => {
             min={1}
             onChange={(e) => setRestTime(e.target.value * 60)}
           />
-          <span>Set break duration</span>
+          <span>Set break time</span>
         </label>
       </SettingWrapper>
       <Timer>
@@ -122,7 +122,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: calc(100vh - 4rem);
 `;
 
 const PomodoroCouterContainer = styled.div`
@@ -144,6 +144,7 @@ const SettingWrapper = styled.div`
   }
 
   input {
+    width: 100px;
     padding: 0.5rem;
     border-radius: 0.5rem;
     border: none;
@@ -174,7 +175,7 @@ const Timer = styled.div`
 const ButtonWrapper = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 2rem;
+  gap: 1rem;
 `;
 
 const Button = styled.button`
