@@ -123,7 +123,7 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: center;
 
-  margin-top: 48px;
+  margin-top: 12px;
 `;
 
 const PomodoroCouterContainer = styled.div`
