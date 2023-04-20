@@ -1,15 +1,66 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
+import { Button } from "@mui/material";
 // firebase
 import { doc, collection, getDocs, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
+// chart
+import ECharts, { EChartsReactProps } from "echarts-for-react";
 
 function DashboardPage() {
+  const [options, setOptions] = useState({
+    xAxis: {
+      type: "category",
+      data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    },
+    yAxis: {
+      type: "value",
+    },
+    series: [
+      {
+        data: [10, 5, 8, 5, 8, 5, 10],
+        type: "line",
+      },
+    ],
+  });
+
+  const tempOptions = {
+    xAxis: {
+      type: "category",
+      data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    },
+    yAxis: {
+      type: "value",
+    },
+    series: [
+      {
+        data: [10, 5, 8, 5, 8, 5, 10],
+        type: "line",
+      },
+    ],
+  };
+
   const [completedTasks, setCompletedTasks] = useState(0);
   const [totalTimeTracked, setTotalTimeTracked] = useState("00:00:00");
 
   const today = new Date().toISOString().slice(0, 10);
+
+  // calculate the date of the last 7 days from today ex: 10-01
+  const calculateLast7Days = () => {
+    const last7Days = [];
+
+    for (let i = 0; i < 7; i++) {
+      const tempDate = new Date();
+      tempDate.setDate(tempDate.getDate() - i);
+      last7Days.push(tempDate.toISOString().slice(5, 10));
+    }
+    // reverse the array so that the date is in ascending order
+    last7Days.reverse();
+
+    // set the xAxis data to the last 7 days
+    tempOptions.xAxis.data = last7Days;
+  };
 
   const checkCompletedTasks = async () => {
     const auth = getAuth();
@@ -37,10 +88,25 @@ function DashboardPage() {
         querySnapshot.docs[i].id
       );
       const docSnap = await getDoc(docRef);
-      const pomodoroCouter = docSnap.data().pomodoroCouter;
-      tempArray.push(pomodoroCouter);
+      const pomodoroCounter = docSnap.data().pomodoroCounter;
+      tempArray.push(pomodoroCounter);
     }
 
+    console.log(tempArray);
+    // several arrays of tempArray
+    tempArray.reverse();
+    const last7DayData = [];
+    for (let i = 0; i < 7; i++) {
+      // several elements sum in each array
+      last7DayData[i] = tempArray[i].reduce((acc, doc) => {
+        return acc + doc;
+      });
+    }
+    console.log("chec", last7DayData.reverse());
+
+    tempOptions.series[0].data = last7DayData;
+
+    setOptions(tempOptions);
     const totalTime = secondsToHms(
       tempArray.flat().reduce((acc, doc) => {
         return acc + doc;
@@ -67,6 +133,7 @@ function DashboardPage() {
 
   useEffect(() => {
     setTimeout(() => {
+      calculateLast7Days();
       checkCompletedTasks();
       checkTotalTimeTracked();
     }, 1000);
@@ -86,7 +153,49 @@ function DashboardPage() {
           <DashboardValue>{totalTimeTracked}</DashboardValue>
           <DashboardLabel>Total Focus Time</DashboardLabel>
         </DashboardCard>
+        <DashboardTitle>
+          Click the button to change the graph data.
+        </DashboardTitle>
       </DashboardCardContainer>
+      <ButtonContainer>
+        <Button
+          variant="contained"
+          onClick={() => {
+            setOptions({
+              ...options,
+              series: [
+                {
+                  data: [150, 230, 224, 218, 135, 147, 260],
+                  type: "line",
+                },
+              ],
+            });
+          }}
+        >
+          Line Chart
+        </Button>
+        <Button
+          variant="contained"
+          onClick={() => {
+            // just change the series data to bar chart
+            setOptions({
+              ...options,
+              series: [
+                {
+                  data: [150, 230, 224, 218, 135, 147, 260],
+                  type: "bar",
+                },
+              ],
+            });
+          }}
+        >
+          Bar Chart
+        </Button>
+      </ButtonContainer>
+      <ECharts
+        option={options}
+        opts={{ renderer: "svg", width: "auto", height: "auto" }}
+      />
     </>
   );
 }
@@ -96,14 +205,12 @@ const DashboardContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 50px;
 `;
 
 const DashboardCardContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  margin-top: 50px;
 `;
 
 const DashboardCard = styled.div`
@@ -130,6 +237,16 @@ const DashboardValue = styled.p`
 const DashboardLabel = styled.p`
   font-size: 16px;
   margin: 10px 0 0;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  button {
+    margin: 10px;
+  }
 `;
 
 export default DashboardPage;
