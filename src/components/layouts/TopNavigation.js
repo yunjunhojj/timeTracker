@@ -1,6 +1,72 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+
+const TopNavigation = () => {
+  const [isLogged, setIsLogged] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const viewPortWidth = window.innerWidth;
+    if (viewPortWidth < 768) {
+      setIsMobile(true);
+    } else {
+      setIsMobile(false);
+    }
+
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsLogged(true);
+      } else {
+        setIsLogged(false);
+      }
+    });
+  }, []);
+
+  const handleLogout = () => {
+    const auth = getAuth();
+    auth.signOut();
+  };
+
+  return (
+    <NavBar>
+      {isMobile ? (
+        <NavTitle onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          Time Tracker {isMenuOpen ? "▲" : " ▼"}
+        </NavTitle>
+      ) : (
+        <NavTitle>Time Tracker</NavTitle>
+      )}
+
+      {isMenuOpen ? (
+        <NavLinks>
+          <NavLink>
+            <Link to="/">Pomodoro</Link>
+          </NavLink>
+          <NavLink>
+            <Link to="/todo">To-Do</Link>
+          </NavLink>
+          <NavLink>
+            <Link to="/timetable">Timetable</Link>
+          </NavLink>
+          <NavLink>
+            <Link to="/dashboard">Dashboard</Link>
+          </NavLink>
+          {!isLogged ? (
+            <NavLink>
+              <Link to="/login">Log In</Link>
+            </NavLink>
+          ) : (
+            <NavLink onClick={handleLogout}>Log Out</NavLink>
+          )}
+        </NavLinks>
+      ) : null}
+    </NavBar>
+  );
+};
 
 const NavBar = styled.nav`
   display: flex;
@@ -50,58 +116,5 @@ const NavLink = styled.li`
     margin: 0.5rem 0;
   }
 `;
-
-const TopNavigation = () => {
-  const [isLogged, setIsLogged] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const viewPortWidth = window.innerWidth;
-    if (viewPortWidth < 768) {
-      setIsMobile(true);
-    } else {
-      setIsMobile(false);
-    }
-  }, []);
-
-  return (
-    <NavBar>
-      {isMobile ? (
-        <NavTitle onClick={() => setIsMenuOpen(!isMenuOpen)}>
-          Time Tracker {isMenuOpen ? "▲" : " ▼"}
-        </NavTitle>
-      ) : (
-        <NavTitle>Time Tracker</NavTitle>
-      )}
-
-      {isMenuOpen ? (
-        <NavLinks>
-          <NavLink>
-            <Link to="/">Pomodoro</Link>
-          </NavLink>
-          <NavLink>
-            <Link to="/todo">To-Do</Link>
-          </NavLink>
-          <NavLink>
-            <Link to="/timetable">Timetable</Link>
-          </NavLink>
-          <NavLink>
-            <Link to="/dashboard">Dashboard</Link>
-          </NavLink>
-          {isLogged ? (
-            <NavLink>
-              <Link to="/login">Log In</Link>
-            </NavLink>
-          ) : (
-            <NavLink>
-              <Link to="/">Log Out</Link>
-            </NavLink>
-          )}
-        </NavLinks>
-      ) : null}
-    </NavBar>
-  );
-};
 
 export default TopNavigation;

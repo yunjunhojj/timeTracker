@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 function LoginPage() {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -15,8 +18,23 @@ function LoginPage() {
 
   const handleSubmit = (event) => {
     event.preventDefault(); // prevent page refresh
-
     // TODO: implement login functionality
+    handleLogin();
+  };
+
+  const handleLogin = () => {
+    const auth = getAuth();
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        // ...
+        navigate("/");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
   };
 
   return (
