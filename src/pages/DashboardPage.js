@@ -106,11 +106,11 @@ function DashboardPage() {
 
       // several elements sum in each array
       last7DayData[i] = tempArray[i].reduce((acc, doc) => {
-        return acc + doc;
+        return (acc + doc) / 60;
       });
     }
 
-    tempOptions.series[0].data = last7DayData;
+    tempOptions.series[0].data = last7DayData.reverse();
 
     setOptions(tempOptions);
     const totalTime = secondsToHms(
