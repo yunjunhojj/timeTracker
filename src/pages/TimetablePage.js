@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Container, Grid, TextField, Typography } from "@mui/material";
 import styled from "styled-components";
 
+import { useNavigate } from "react-router-dom";
+
 import {
   doc,
   setDoc,
@@ -23,6 +25,8 @@ const TimetablePageWrapper = styled.div`
 `;
 
 const TimetablePage = () => {
+  const navigate = useNavigate();
+
   const [timetable, setTimetable] = useState(Array(24).fill(""));
   const todaysDate = new Date().toISOString().slice(0, 10);
   const [date, setDate] = useState(todaysDate);
@@ -52,6 +56,17 @@ const TimetablePage = () => {
   };
 
   useEffect(() => {
+    // timetable data initialize
+    const newTimetable = Array(24).fill("");
+    setTimetable(newTimetable);
+
+    // login check
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (!user) {
+      navigate("/login");
+    }
+
     setTimeout(() => {
       getData();
     }, 1000);
