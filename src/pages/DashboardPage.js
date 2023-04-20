@@ -92,7 +92,6 @@ function DashboardPage() {
       tempArray.push(pomodoroCounter);
     }
 
-    console.log(tempArray);
     // several arrays of tempArray
     tempArray.reverse();
     const last7DayData = [];
@@ -102,7 +101,6 @@ function DashboardPage() {
         return acc + doc;
       });
     }
-    console.log("chec", last7DayData.reverse());
 
     tempOptions.series[0].data = last7DayData;
 
@@ -153,10 +151,10 @@ function DashboardPage() {
           <DashboardValue>{totalTimeTracked}</DashboardValue>
           <DashboardLabel>Total Focus Time</DashboardLabel>
         </DashboardCard>
-        <DashboardTitle>
-          Click the button to change the graph data.
-        </DashboardTitle>
-      </DashboardCardContainer>
+      </DashboardCardContainer>{" "}
+      <DashboardTitle>
+        Click the button to change the graph data.
+      </DashboardTitle>
       <ButtonContainer>
         <Button
           variant="contained"
@@ -165,7 +163,7 @@ function DashboardPage() {
               ...options,
               series: [
                 {
-                  data: [150, 230, 224, 218, 135, 147, 260],
+                  data: options.series[0].data,
                   type: "line",
                 },
               ],
@@ -182,7 +180,7 @@ function DashboardPage() {
               ...options,
               series: [
                 {
-                  data: [150, 230, 224, 218, 135, 147, 260],
+                  data: options.series[0].data,
                   type: "bar",
                 },
               ],
@@ -226,6 +224,8 @@ const DashboardCard = styled.div`
 const DashboardTitle = styled.h2`
   font-size: 24px;
   margin-bottom: 10px;
+
+  text-align: center;
 `;
 
 const DashboardValue = styled.p`
