@@ -12,12 +12,11 @@ const PomodoroTimerPage = () => {
   const [restTime, setRestTime] = useState(300);
 
   const toggle = () => {
-    isResting ? setTimeLeft(restTime) : setTimeLeft(focusTime);
-
     setIsActive(!isActive);
   };
 
   const reset = () => {
+    setTimeLeft(focusTime);
     setIsActive(false);
     setIsResting(false);
   };
