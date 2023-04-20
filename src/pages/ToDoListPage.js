@@ -18,7 +18,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { db } from "../firebase";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 
 const TodoListPage = () => {
   const navigate = useNavigate();
@@ -53,14 +53,14 @@ const TodoListPage = () => {
   };
 
   const addTaskToFirebase = async (task) => {
-    const docRef = doc(db, user + "todo", task.id);
+    const docRef = doc(db, user + "-todo", task.id);
     await setDoc(docRef, task);
     dispatch(addTodo(task));
   };
 
   const getTasksFromFirebase = async () => {
-    console.log("user: ", user + "todo");
-    const querySnapshot = await getDocs(collection(db, user + "todo"));
+    console.log("user: ", user + "-todo");
+    const querySnapshot = await getDocs(collection(db, user + "-todo"));
     dispatch(resetTodoList());
     querySnapshot.forEach((doc) => {
       dispatch(addTodo(doc.data()));
@@ -68,7 +68,7 @@ const TodoListPage = () => {
   };
 
   const updateTaskInFirebase = async (task) => {
-    const docRef = doc(db, user + "todo", task.id);
+    const docRef = doc(db, user + "-todo", task.id);
 
     const updatedTask = {
       ...task,
@@ -79,7 +79,7 @@ const TodoListPage = () => {
   };
 
   const deleteTaskFromFirebase = async (taskId) => {
-    const docRef = doc(db, user + "todo", taskId);
+    const docRef = doc(db, user + "-todo", taskId);
     await deleteDoc(docRef);
   };
 
