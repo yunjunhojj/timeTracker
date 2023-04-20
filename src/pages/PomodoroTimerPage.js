@@ -10,7 +10,7 @@ const PomodoroTimerPage = () => {
   const [timeLeft, setTimeLeft] = useState(1500);
   const [isActive, setIsActive] = useState(false);
   const [isResting, setIsResting] = useState(false);
-  const [pomodoroCouter, setPomodoroCouter] = useState([]);
+  const [pomodoroCounter, setPomodoroCounter] = useState([]);
 
   const [focusTime, setFocusTime] = useState(1500);
   const [restTime, setRestTime] = useState(300);
@@ -44,11 +44,11 @@ const PomodoroTimerPage = () => {
           // pomodoro session is over
           setIsResting(true);
           setTimeLeft(restTime);
-          setPomodoroCouter((prevPomodoroCouter) => [
-            ...prevPomodoroCouter,
+          setPomodoroCounter((prevPomodoroCounter) => [
+            ...prevPomodoroCounter,
             focusTime,
           ]);
-          savePomodoroCouterToFirebase();
+          savePomodoroCounterToFirebase();
         } else {
           // rest time is over
           setIsResting(false);
@@ -69,20 +69,20 @@ const PomodoroTimerPage = () => {
     }`;
   };
 
-  const savePomodoroCouterToFirebase = () => {
+  const savePomodoroCounterToFirebase = () => {
     const auth = getAuth();
     const user = auth.currentUser;
     const docRef = doc(db, user.email + "-pomodoro", todaysDate);
-    setDoc(docRef, { pomodoroCouter: [...pomodoroCouter, focusTime] });
+    setDoc(docRef, { pomodoroCounter: [...pomodoroCounter, focusTime] });
   };
 
-  const getPomodoroCouterFromFirebase = async () => {
+  const getPomodoroCounterFromFirebase = async () => {
     const auth = getAuth();
     const user = auth.currentUser;
     const docRef = doc(db, user.email + "-pomodoro", todaysDate);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      setPomodoroCouter(docSnap.data().pomodoroCouter);
+      setPomodoroCounter(docSnap.data().pomodoroCounter);
     }
   };
 
@@ -90,7 +90,7 @@ const PomodoroTimerPage = () => {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        getPomodoroCouterFromFirebase();
+        getPomodoroCounterFromFirebase();
       }
     });
   }, []);
@@ -98,12 +98,12 @@ const PomodoroTimerPage = () => {
   return (
     <Wrapper>
       <h1>Pomodoro Timer</h1>
-      <PomodoroCouterContainer>
-        <>I have completed {pomodoroCouter.length} Pomodoro sessions </>
-        {pomodoroCouter.map((pomodoro, index) => {
+      <PomodoroCounterContainer>
+        <>I have completed {pomodoroCounter.length} Pomodoro sessions </>
+        {pomodoroCounter.map((pomodoro, index) => {
           return <ThumbUpAltIcon key={index} style={{ color: "red" }} />;
         })}
-      </PomodoroCouterContainer>
+      </PomodoroCounterContainer>
       <SettingWrapper>
         <label>
           <input
@@ -160,7 +160,7 @@ const Wrapper = styled.div`
   margin-top: 12px;
 `;
 
-const PomodoroCouterContainer = styled.div`
+const PomodoroCounterContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 1rem;
