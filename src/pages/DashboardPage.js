@@ -84,7 +84,7 @@ function DashboardPage() {
         </DashboardCard>
         <DashboardCard>
           <DashboardValue>{totalTimeTracked}</DashboardValue>
-          <DashboardLabel>Total Time Tracked</DashboardLabel>
+          <DashboardLabel>Total Focus Time</DashboardLabel>
         </DashboardCard>
       </DashboardCardContainer>
     </>
