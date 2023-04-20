@@ -26,6 +26,10 @@ const TodoListPage = () => {
   const todoList = useSelector((state) => state.todo.todoList);
   const dispatch = useDispatch();
   const [user, setUser] = useState("testUser");
+  const [todayTasks, setTodayTasks] = useState([]);
+  const [showtodayTasks, setShowTodayTasks] = useState(false);
+
+  const todaysDate = new Date().toISOString().slice(0, 10);
 
   const handleAddTask = (event) => {
     event.preventDefault();
@@ -35,7 +39,7 @@ const TodoListPage = () => {
         id: new Date().toISOString(),
         name: taskName,
         completed: false,
-        createdAt: new Date().toISOString(),
+        createdAt: todaysDate,
       };
       addTaskToFirebase(newTask);
       event.target.reset();
@@ -59,7 +63,6 @@ const TodoListPage = () => {
   };
 
   const getTasksFromFirebase = async () => {
-    console.log("user: ", user + "-todo");
     const querySnapshot = await getDocs(collection(db, user + "-todo"));
     dispatch(resetTodoList());
     querySnapshot.forEach((doc) => {
@@ -83,6 +86,13 @@ const TodoListPage = () => {
     await deleteDoc(docRef);
   };
 
+  const showTodayTasks = () => {
+    if (!showtodayTasks) {
+      setTodayTasks(todoList.filter((task) => task.createdAt === todaysDate));
+    }
+    setShowTodayTasks(!showtodayTasks);
+  };
+
   useEffect(() => {
     getAuth().onAuthStateChanged((user) => {
       if (user) {
@@ -97,27 +107,49 @@ const TodoListPage = () => {
   return (
     <Wrapper>
       <h1>Todo List</h1>
+      <ButtonTodayTasks onClick={() => showTodayTasks()}>
+        {showtodayTasks ? "Show all tasks" : "Show only today's tasks"}
+      </ButtonTodayTasks>
       {user && <p>Logged in as {user}</p>}
+
       <Form onSubmit={handleAddTask}>
         <Input type="text" name="taskName" placeholder="Enter task name" />
         <Button type="submit">Add</Button>
       </Form>
       {todoList.length > 0 ? (
-        <List>
-          {todoList.map((todo) => (
-            <ListItem key={todo.id} completed={todo.completed}>
-              <Checkbox
-                type="checkbox"
-                checked={todo.completed}
-                onChange={() => handleToggleTask(todo.id)}
-              />
-              <TaskName completed={todo.completed}>{todo.name}</TaskName>
-              <DeleteButton onClick={() => handleDeleteTask(todo.id)}>
-                Delete
-              </DeleteButton>
-            </ListItem>
-          ))}
-        </List>
+        showtodayTasks ? (
+          <List>
+            {todayTasks.map((todo) => (
+              <ListItem key={todo.id} completed={todo.completed}>
+                <Checkbox
+                  type="checkbox"
+                  checked={todo.completed}
+                  onChange={() => handleToggleTask(todo.id)}
+                />
+                <TaskName completed={todo.completed}>{todo.name}</TaskName>
+                <DeleteButton onClick={() => handleDeleteTask(todo.id)}>
+                  Delete
+                </DeleteButton>
+              </ListItem>
+            ))}
+          </List>
+        ) : (
+          <List>
+            {todoList.map((todo) => (
+              <ListItem key={todo.id} completed={todo.completed}>
+                <Checkbox
+                  type="checkbox"
+                  checked={todo.completed}
+                  onChange={() => handleToggleTask(todo.id)}
+                />
+                <TaskName completed={todo.completed}>{todo.name}</TaskName>
+                <DeleteButton onClick={() => handleDeleteTask(todo.id)}>
+                  Delete
+                </DeleteButton>
+              </ListItem>
+            ))}
+          </List>
+        )
       ) : (
         <p>No tasks added yet.</p>
       )}
@@ -151,6 +183,24 @@ const Input = styled.input`
   &:focus {
     outline: none;
     border-color: #0077ff;
+  }
+`;
+
+const ButtonTodayTasks = styled.button`
+  background-color: #0077ff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 20px;
+
+  &:hover {
+    background-color: #0062cc;
+  }
+  &:focus {
+    outline: none;
   }
 `;
 
