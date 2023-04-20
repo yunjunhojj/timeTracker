@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
-import { v4 as uuid } from "uuid";
 // redux
 import { useDispatch, useSelector } from "react-redux";
 import {
