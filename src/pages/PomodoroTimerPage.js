@@ -32,8 +32,10 @@ const PomodoroTimerPage = () => {
     if (isActive) {
       interval = setInterval(() => {
         if (timeLeft > 0) {
+          // pomodoro session is not over
           setTimeLeft((prevTime) => prevTime - 1);
         } else if (!isResting) {
+          // pomodoro session is over
           setIsResting(true);
           setTimeLeft(restTime);
           setPomodoroCouter((prevPomodoroCouter) => [
@@ -41,6 +43,7 @@ const PomodoroTimerPage = () => {
             "pomo",
           ]);
         } else {
+          // rest time is over
           setIsResting(false);
           setTimeLeft(focusTime);
         }
