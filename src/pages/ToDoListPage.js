@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 // redux
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -17,6 +18,111 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { db } from "../firebase";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+
+const TodoListPage = () => {
+  const navigate = useNavigate();
+
+  const todoList = useSelector((state) => state.todo.todoList);
+  const dispatch = useDispatch();
+  const [user, setUser] = useState("testUser");
+
+  const handleAddTask = (event) => {
+    event.preventDefault();
+    const taskName = event.target.elements.taskName.value.trim();
+    if (taskName) {
+      const newTask = {
+        id: new Date().toISOString(),
+        name: taskName,
+        completed: false,
+        createdAt: new Date().toISOString(),
+      };
+      addTaskToFirebase(newTask);
+      event.target.reset();
+    }
+  };
+
+  const handleToggleTask = (taskId) => {
+    dispatch(toggleTodo(taskId));
+    updateTaskInFirebase(todoList.find((task) => task.id === taskId));
+  };
+
+  const handleDeleteTask = (taskId) => {
+    deleteTaskFromFirebase(taskId);
+    dispatch(removeTodo(taskId));
+  };
+
+  const addTaskToFirebase = async (task) => {
+    const docRef = doc(db, user, task.id);
+    await setDoc(docRef, task);
+    dispatch(addTodo(task));
+  };
+
+  const getTasksFromFirebase = async () => {
+    const querySnapshot = await getDocs(collection(db, user));
+    dispatch(resetTodoList());
+    querySnapshot.forEach((doc) => {
+      dispatch(addTodo(doc.data()));
+    });
+  };
+
+  const updateTaskInFirebase = async (task) => {
+    const docRef = doc(db, user, task.id);
+
+    const updatedTask = {
+      ...task,
+      completed: !task.completed,
+    };
+
+    await setDoc(docRef, updatedTask);
+  };
+
+  const deleteTaskFromFirebase = async (taskId) => {
+    const docRef = doc(db, user, taskId);
+    await deleteDoc(docRef);
+  };
+
+  useEffect(() => {
+    getAuth().onAuthStateChanged((user) => {
+      if (user) {
+        setUser(user.reloadUserInfo.email);
+      } else {
+        setUser("testUser");
+      }
+    });
+    getTasksFromFirebase();
+  }, []);
+
+  return (
+    <Wrapper>
+      <h1>Todo List</h1>
+      {user && <p>Logged in as {user}</p>}
+      <Form onSubmit={handleAddTask}>
+        <Input type="text" name="taskName" placeholder="Enter task name" />
+        <Button type="submit">Add</Button>
+      </Form>
+      {todoList.length > 0 ? (
+        <List>
+          {todoList.map((todo) => (
+            <ListItem key={todo.id} completed={todo.completed}>
+              <Checkbox
+                type="checkbox"
+                checked={todo.completed}
+                onChange={() => handleToggleTask(todo.id)}
+              />
+              <TaskName completed={todo.completed}>{todo.name}</TaskName>
+              <DeleteButton onClick={() => handleDeleteTask(todo.id)}>
+                Delete
+              </DeleteButton>
+            </ListItem>
+          ))}
+        </List>
+      ) : (
+        <p>No tasks added yet.</p>
+      )}
+    </Wrapper>
+  );
+};
 
 const Wrapper = styled.div`
   display: flex;
@@ -115,102 +221,5 @@ const DeleteButton = styled.button`
     outline: none;
   }
 `;
-
-const TodoListPage = () => {
-  const todoList = useSelector((state) => state.todo.todoList);
-  const dispatch = useDispatch();
-  const user = {
-    id: "Aron",
-    name: "Subin",
-  };
-
-  const handleAddTask = (event) => {
-    event.preventDefault();
-    const taskName = event.target.elements.taskName.value.trim();
-    if (taskName) {
-      const newTask = {
-        id: new Date().toISOString(),
-        name: taskName,
-        completed: false,
-        createdAt: new Date().toISOString(),
-      };
-      addTaskToFirebase(newTask);
-      event.target.reset();
-    }
-  };
-
-  const handleToggleTask = (taskId) => {
-    dispatch(toggleTodo(taskId));
-    updateTaskInFirebase(todoList.find((task) => task.id === taskId));
-  };
-
-  const handleDeleteTask = (taskId) => {
-    deleteTaskFromFirebase(taskId);
-    dispatch(removeTodo(taskId));
-  };
-
-  const addTaskToFirebase = async (task) => {
-    const docRef = doc(db, user.id, task.id);
-    await setDoc(docRef, task);
-    dispatch(addTodo(task));
-  };
-
-  const getTasksFromFirebase = async () => {
-    const querySnapshot = await getDocs(collection(db, user.id));
-    dispatch(resetTodoList());
-    querySnapshot.forEach((doc) => {
-      dispatch(addTodo(doc.data()));
-    });
-  };
-
-  const updateTaskInFirebase = async (task) => {
-    const docRef = doc(db, user.id, task.id);
-
-    const updatedTask = {
-      ...task,
-      completed: !task.completed,
-    };
-
-    await setDoc(docRef, updatedTask);
-  };
-
-  const deleteTaskFromFirebase = async (taskId) => {
-    const docRef = doc(db, user.id, taskId);
-    await deleteDoc(docRef);
-  };
-
-  useEffect(() => {
-    getTasksFromFirebase();
-  }, []);
-
-  return (
-    <Wrapper>
-      <h1>Todo List</h1>
-      <Form onSubmit={handleAddTask}>
-        <Input type="text" name="taskName" placeholder="Enter task name" />
-        <Button type="submit">Add</Button>
-      </Form>
-      {todoList.length > 0 ? (
-        <List>
-          {todoList.map((todo) => (
-            <ListItem key={todo.id} completed={todo.completed}>
-              <Checkbox
-                type="checkbox"
-                checked={todo.completed}
-                onChange={() => handleToggleTask(todo.id)}
-              />
-              <TaskName completed={todo.completed}>{todo.name}</TaskName>
-              <DeleteButton onClick={() => handleDeleteTask(todo.id)}>
-                Delete
-              </DeleteButton>
-            </ListItem>
-          ))}
-        </List>
-      ) : (
-        <p>No tasks added yet.</p>
-      )}
-    </Wrapper>
-  );
-};
 
 export default TodoListPage;

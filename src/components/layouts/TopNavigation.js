@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const TopNavigation = () => {
+  const navigate = useNavigate();
+
   const [isLogged, setIsLogged] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
@@ -29,6 +31,7 @@ const TopNavigation = () => {
   const handleLogout = () => {
     const auth = getAuth();
     auth.signOut();
+    navigate("/login");
   };
 
   return (
