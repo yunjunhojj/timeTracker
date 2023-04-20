@@ -89,13 +89,21 @@ function DashboardPage() {
       );
       const docSnap = await getDoc(docRef);
       const pomodoroCounter = docSnap.data().pomodoroCounter;
-      tempArray.push(pomodoroCounter);
+      pomodoroCounter === undefined
+        ? tempArray.push([0])
+        : tempArray.push(pomodoroCounter);
     }
 
     // several arrays of tempArray
     tempArray.reverse();
     const last7DayData = [];
     for (let i = 0; i < 7; i++) {
+      // if undefined then return 0
+      if (tempArray[i] === undefined) {
+        last7DayData[i] = 0;
+        continue;
+      }
+
       // several elements sum in each array
       last7DayData[i] = tempArray[i].reduce((acc, doc) => {
         return acc + doc;
