@@ -18,7 +18,6 @@ const PomodoroTimerPage = () => {
   };
 
   const reset = () => {
-    setTimeLeft(focusTime);
     setIsActive(false);
     setIsResting(false);
   };
