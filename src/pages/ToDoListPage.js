@@ -1,13 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { v4 as uuid } from "uuid";
-
+// redux
 import { useDispatch, useSelector } from "react-redux";
 import {
   addTodo,
   toggleTodo,
   removeTodo,
+  resetTodoList,
 } from "../features/todoSlice/todoSlice";
+// firebase
+import {
+  doc,
+  setDoc,
+  collection,
+  getDocs,
+  deleteDoc,
+} from "firebase/firestore";
+import { db } from "../firebase";
 
 const Wrapper = styled.div`
   display: flex;
@@ -110,29 +120,69 @@ const DeleteButton = styled.button`
 const TodoListPage = () => {
   const todoList = useSelector((state) => state.todo.todoList);
   const dispatch = useDispatch();
+  const user = {
+    id: "Aron",
+    name: "Subin",
+  };
 
   const handleAddTask = (event) => {
     event.preventDefault();
     const taskName = event.target.elements.taskName.value.trim();
     if (taskName) {
       const newTask = {
-        id: uuid(),
+        id: new Date().toISOString(),
         name: taskName,
         completed: false,
+        createdAt: new Date().toISOString(),
       };
-      dispatch(addTodo(newTask));
-
+      addTaskToFirebase(newTask);
       event.target.reset();
     }
   };
 
   const handleToggleTask = (taskId) => {
     dispatch(toggleTodo(taskId));
+    updateTaskInFirebase(todoList.find((task) => task.id === taskId));
   };
 
   const handleDeleteTask = (taskId) => {
+    deleteTaskFromFirebase(taskId);
     dispatch(removeTodo(taskId));
   };
+
+  const addTaskToFirebase = async (task) => {
+    const docRef = doc(db, user.id, task.id);
+    await setDoc(docRef, task);
+    dispatch(addTodo(task));
+  };
+
+  const getTasksFromFirebase = async () => {
+    const querySnapshot = await getDocs(collection(db, user.id));
+    dispatch(resetTodoList());
+    querySnapshot.forEach((doc) => {
+      dispatch(addTodo(doc.data()));
+    });
+  };
+
+  const updateTaskInFirebase = async (task) => {
+    const docRef = doc(db, user.id, task.id);
+
+    const updatedTask = {
+      ...task,
+      completed: !task.completed,
+    };
+
+    await setDoc(docRef, updatedTask);
+  };
+
+  const deleteTaskFromFirebase = async (taskId) => {
+    const docRef = doc(db, user.id, taskId);
+    await deleteDoc(docRef);
+  };
+
+  useEffect(() => {
+    getTasksFromFirebase();
+  }, []);
 
   return (
     <Wrapper>

@@ -31,13 +31,19 @@ export const todoSlice = createSlice({
         return todo;
       });
     },
-    setTodo: (state, action) => {
-      state.todo = action.payload;
+    resetTodoList: (state) => {
+      state.todoList = [];
     },
   },
 });
 
-export const { addTodo, removeTodo, toggleTodo, updateTodo, setTodo } =
-  todoSlice.actions;
+export const {
+  addTodo,
+  removeTodo,
+  toggleTodo,
+  updateTodo,
+  setTodo,
+  resetTodoList,
+} = todoSlice.actions;
 
 export default todoSlice.reducer;
