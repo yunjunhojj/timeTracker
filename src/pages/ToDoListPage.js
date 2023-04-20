@@ -2,6 +2,13 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { v4 as uuid } from "uuid";
 
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addTodo,
+  toggleTodo,
+  removeTodo,
+} from "../features/todoSlice/todoSlice";
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -101,7 +108,8 @@ const DeleteButton = styled.button`
 `;
 
 const TodoListPage = () => {
-  const [tasks, setTasks] = useState([]);
+  const todoList = useSelector((state) => state.todo.todoList);
+  const dispatch = useDispatch();
 
   const handleAddTask = (event) => {
     event.preventDefault();
@@ -112,28 +120,18 @@ const TodoListPage = () => {
         name: taskName,
         completed: false,
       };
-      setTasks([...tasks, newTask]);
+      dispatch(addTodo(newTask));
+
       event.target.reset();
     }
   };
 
   const handleToggleTask = (taskId) => {
-    const updatedTasks = tasks.map((task) => {
-      if (task.id === taskId) {
-        return {
-          ...task,
-          completed: !task.completed,
-        };
-      } else {
-        return task;
-      }
-    });
-    setTasks(updatedTasks);
+    dispatch(toggleTodo(taskId));
   };
 
   const handleDeleteTask = (taskId) => {
-    const updatedTasks = tasks.filter((task) => task.id !== taskId);
-    setTasks(updatedTasks);
+    dispatch(removeTodo(taskId));
   };
 
   return (
@@ -143,17 +141,17 @@ const TodoListPage = () => {
         <Input type="text" name="taskName" placeholder="Enter task name" />
         <Button type="submit">Add</Button>
       </Form>
-      {tasks.length > 0 ? (
+      {todoList.length > 0 ? (
         <List>
-          {tasks.map((task) => (
-            <ListItem key={task.id} completed={task.completed}>
+          {todoList.map((todo) => (
+            <ListItem key={todo.id} completed={todo.completed}>
               <Checkbox
                 type="checkbox"
-                checked={task.completed}
-                onChange={() => handleToggleTask(task.id)}
+                checked={todo.completed}
+                onChange={() => handleToggleTask(todo.id)}
               />
-              <TaskName completed={task.completed}>{task.name}</TaskName>
-              <DeleteButton onClick={() => handleDeleteTask(task.id)}>
+              <TaskName completed={todo.completed}>{todo.name}</TaskName>
+              <DeleteButton onClick={() => handleDeleteTask(todo.id)}>
                 Delete
               </DeleteButton>
             </ListItem>
