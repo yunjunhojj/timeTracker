@@ -53,13 +53,14 @@ const TodoListPage = () => {
   };
 
   const addTaskToFirebase = async (task) => {
-    const docRef = doc(db, user, task.id);
+    const docRef = doc(db, user + "todo", task.id);
     await setDoc(docRef, task);
     dispatch(addTodo(task));
   };
 
   const getTasksFromFirebase = async () => {
-    const querySnapshot = await getDocs(collection(db, user));
+    console.log("user: ", user + "todo");
+    const querySnapshot = await getDocs(collection(db, user + "todo"));
     dispatch(resetTodoList());
     querySnapshot.forEach((doc) => {
       dispatch(addTodo(doc.data()));
@@ -67,7 +68,7 @@ const TodoListPage = () => {
   };
 
   const updateTaskInFirebase = async (task) => {
-    const docRef = doc(db, user, task.id);
+    const docRef = doc(db, user + "todo", task.id);
 
     const updatedTask = {
       ...task,
@@ -78,7 +79,7 @@ const TodoListPage = () => {
   };
 
   const deleteTaskFromFirebase = async (taskId) => {
-    const docRef = doc(db, user, taskId);
+    const docRef = doc(db, user + "todo", taskId);
     await deleteDoc(docRef);
   };
 
@@ -91,7 +92,7 @@ const TodoListPage = () => {
       }
     });
     getTasksFromFirebase();
-  }, []);
+  }, [user]);
 
   return (
     <Wrapper>
