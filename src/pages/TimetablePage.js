@@ -14,16 +14,6 @@ import {
 import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
 
-const TimetablePageWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-
-  padding-bottom: 40px;
-`;
-
 const TimetablePage = () => {
   const navigate = useNavigate();
 
@@ -115,6 +105,16 @@ const TimetablePage = () => {
   );
 };
 
+const TimetablePageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+
+  padding-bottom: 40px;
+`;
+
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
@@ -134,6 +134,7 @@ const SaveButton = styled.button`
   cursor: pointer;
 
   height: 56px;
+  width: 100px;
 
   &:hover {
     background-color: #0062cc;
@@ -154,6 +155,7 @@ const GetButton = styled.button`
   cursor: pointer;
 
   height: 56px;
+  width: 100px;
 
   &:hover {
     background-color: #cc0000;
