@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
+// firebase
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { doc, setDoc, getDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
 const PomodoroTimerPage = () => {
   const [timeLeft, setTimeLeft] = useState(1500);
@@ -10,6 +14,8 @@ const PomodoroTimerPage = () => {
 
   const [focusTime, setFocusTime] = useState(1500);
   const [restTime, setRestTime] = useState(300);
+
+  const todaysDate = new Date().toISOString().slice(0, 10);
 
   const toggle = () => {
     setIsActive(!isActive);
@@ -40,8 +46,9 @@ const PomodoroTimerPage = () => {
           setTimeLeft(restTime);
           setPomodoroCouter((prevPomodoroCouter) => [
             ...prevPomodoroCouter,
-            "pomo",
+            focusTime,
           ]);
+          savePomodoroCouterToFirebase();
         } else {
           // rest time is over
           setIsResting(false);
@@ -62,13 +69,39 @@ const PomodoroTimerPage = () => {
     }`;
   };
 
+  const savePomodoroCouterToFirebase = () => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const docRef = doc(db, user.email + "-pomodoro", todaysDate);
+    setDoc(docRef, { pomodoroCouter: [...pomodoroCouter, focusTime] });
+  };
+
+  const getPomodoroCouterFromFirebase = async () => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const docRef = doc(db, user.email + "-pomodoro", todaysDate);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      setPomodoroCouter(docSnap.data().pomodoroCouter);
+    }
+  };
+
+  useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        getPomodoroCouterFromFirebase();
+      }
+    });
+  }, []);
+
   return (
     <Wrapper>
       <h1>Pomodoro Timer</h1>
       <PomodoroCouterContainer>
         <>I have completed {pomodoroCouter.length} Pomodoro sessions </>
-        {pomodoroCouter.map((pomodoro) => {
-          return <ThumbUpAltIcon style={{ color: "red" }} />;
+        {pomodoroCouter.map((pomodoro, index) => {
+          return <ThumbUpAltIcon key={index} style={{ color: "red" }} />;
         })}
       </PomodoroCouterContainer>
       <SettingWrapper>
@@ -159,6 +192,20 @@ const SettingWrapper = styled.div`
     &:hover {
       background-color: #006ba1;
     }
+  }
+`;
+
+const SaveButton = styled.button`
+  font-size: 1.5rem;
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  border: none;
+  background-color: #0077c2;
+  color: #fff;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #006ba1;
   }
 `;
 
