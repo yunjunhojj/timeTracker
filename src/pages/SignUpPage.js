@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 const SignUpPageWrapper = styled.div`
   display: flex;
@@ -43,6 +45,9 @@ const SignUpButton = styled.button`
 `;
 
 function SignUpPage() {
+  const navigate = useNavigate();
+  const auth = getAuth();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -62,7 +67,33 @@ function SignUpPage() {
   const handleSubmit = (event) => {
     event.preventDefault();
     // implement sign up functionality here
+    if (password !== confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
+      });
+
+    navigate("/");
   };
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        navigate("/");
+      }
+    });
+    return unsubscribe;
+  }, [auth, navigate]);
 
   return (
     <SignUpPageWrapper>
