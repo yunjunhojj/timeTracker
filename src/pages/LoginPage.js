@@ -57,7 +57,8 @@ function LoginPage() {
         <Button type="submit">Login</Button>
       </Form>
       <p>
-        아이디가 없으신가요? <a href="/signup">Sign up</a>
+        Don't have an account?
+        <a href="/signup">Sign up</a>
       </p>
     </LoginPageContainer>
   );
