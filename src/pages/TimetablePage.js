@@ -12,15 +12,19 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { db } from "../firebase";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+
+import { useCheckLogin } from "../hooks/useCheckLogin";
+import getCurrentUserId from "../utils/firebase/getCurrentUserId";
 
 const TimetablePage = () => {
-  const navigate = useNavigate();
-
   const [timetable, setTimetable] = useState(Array(24).fill(""));
   const todaysDate = new Date().toISOString().slice(0, 10);
   const [date, setDate] = useState(todaysDate);
 
+  const [isLogged, setIsLogged] = useCheckLogin();
+
+  const userId = getCurrentUserId();
   const handleChange = (event, index) => {
     const newTimetable = [...timetable];
     newTimetable[index] = event.target.value;
@@ -28,18 +32,13 @@ const TimetablePage = () => {
   };
 
   const saveTimeTable = async () => {
-    const auth = getAuth();
-    const user = auth.currentUser;
-    const docRef = doc(db, user.email + "-timetable", date);
+    const docRef = doc(db, userId + "-timetable", date);
     await setDoc(docRef, { timetable });
   };
 
-  const getData = async () => {
-    const auth = getAuth();
-    const user = auth.currentUser;
-    const querySnapshot = await getDocs(
-      collection(db, user.email + "-timetable")
-    );
+  const getData = async (userId) => {
+    const querySnapshot = await getDocs(collection(db, userId + "-timetable"));
+
     querySnapshot.forEach((doc) => {
       doc.id === date && setTimetable(doc.data().timetable);
     });
@@ -50,15 +49,9 @@ const TimetablePage = () => {
     const newTimetable = Array(24).fill("");
     setTimetable(newTimetable);
 
-    // login check
-    const auth = getAuth();
-    const user = auth.currentUser;
-    if (!user) {
-      navigate("/login");
-    }
-
     setTimeout(() => {
-      getData();
+      const userId = getCurrentUserId();
+      getData(userId);
     }, 1000);
   }, [date]);
 

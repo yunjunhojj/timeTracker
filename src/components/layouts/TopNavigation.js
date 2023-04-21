@@ -19,16 +19,17 @@ const TopNavigation = () => {
       setIsMobile(false);
     }
 
+    // login status check
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setIsLogged(true);
-        setLoadUser(true);
       } else {
         setIsLogged(false);
       }
+      setLoadUser(true);
     });
-  }, []);
+  }, [loadUser]);
 
   const handleLogout = () => {
     const auth = getAuth();
