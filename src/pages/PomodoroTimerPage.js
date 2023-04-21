@@ -98,8 +98,8 @@ const PomodoroTimerPage = () => {
   return (
     <Wrapper>
       <h1>Pomodoro Timer</h1>
+      <div>I have completed {pomodoroCounter.length} Pomodoro sessions </div>
       <PomodoroCounterContainer>
-        <>I have completed {pomodoroCounter.length} Pomodoro sessions </>
         {pomodoroCounter.map((pomodoro, index) => {
           return <ThumbUpAltIcon key={index} style={{ color: "red" }} />;
         })}
@@ -164,6 +164,8 @@ const PomodoroCounterContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 1rem;
+
+  margin-top: 1rem;
 `;
 
 const SettingWrapper = styled.div`
@@ -183,7 +185,7 @@ const SettingWrapper = styled.div`
     padding: 0.5rem;
     border-radius: 0.5rem;
     border: none;
-    background-color: gray;
+    background-color: #4d4d4d;
     color: #fff;
     cursor: pointer;
 
@@ -192,20 +194,6 @@ const SettingWrapper = styled.div`
     &:hover {
       background-color: #006ba1;
     }
-  }
-`;
-
-const SaveButton = styled.button`
-  font-size: 1.5rem;
-  padding: 1rem 2rem;
-  border-radius: 0.5rem;
-  border: none;
-  background-color: #0077c2;
-  color: #fff;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #006ba1;
   }
 `;
 
