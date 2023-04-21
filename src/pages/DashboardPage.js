@@ -8,6 +8,9 @@ import { getAuth } from "firebase/auth";
 // chart
 import ECharts, { EChartsReactProps } from "echarts-for-react";
 
+// utils
+import { calculateLast7Days, secondsToHms } from "../utils/math";
+
 function DashboardPage() {
   const [options, setOptions] = useState({
     xAxis: {
@@ -46,22 +49,6 @@ function DashboardPage() {
 
   const today = new Date().toISOString().slice(0, 10);
 
-  // calculate the date of the last 7 days from today ex: 10-01
-  const calculateLast7Days = () => {
-    const last7Days = [];
-
-    for (let i = 0; i < 7; i++) {
-      const tempDate = new Date();
-      tempDate.setDate(tempDate.getDate() - i);
-      last7Days.push(tempDate.toISOString().slice(5, 10));
-    }
-    // reverse the array so that the date is in ascending order
-    last7Days.reverse();
-
-    // set the xAxis data to the last 7 days
-    tempOptions.xAxis.data = last7Days;
-  };
-
   const checkCompletedTasks = async () => {
     const auth = getAuth();
     const user = auth.currentUser;
@@ -81,6 +68,7 @@ function DashboardPage() {
 
     const tempArray = [];
 
+    // several arrays of pomodoroCounter
     for (let i = 0; i < querySnapshot.docs.length; i++) {
       const docRef = doc(
         db,
@@ -122,24 +110,9 @@ function DashboardPage() {
     setTotalTimeTracked(totalTime);
   };
 
-  // input sec output hh:mm:ss
-  const secondsToHms = (d) => {
-    d = Number(d);
-    var h = Math.floor(d / 3600);
-    var m = Math.floor((d % 3600) / 60);
-    var s = Math.floor((d % 3600) % 60);
-
-    // if 0 then display 00
-    h = h < 10 ? "0" + h : h;
-    m = m < 10 ? "0" + m : m;
-    s = s < 10 ? "0" + s : s;
-
-    return h + ":" + m + ":" + s;
-  };
-
   useEffect(() => {
     setTimeout(() => {
-      calculateLast7Days();
+      tempOptions.xAxis.data = calculateLast7Days();
       checkCompletedTasks();
       checkTotalTimeTracked();
     }, 1000);
