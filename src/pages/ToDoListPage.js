@@ -8,7 +8,7 @@ import {
   toggleTodo,
   removeTodo,
   resetTodoList,
-} from "../features/todoSlice/todoSlice";
+} from "../features/createSlice/todoSlice";
 // firebase
 import {
   doc,

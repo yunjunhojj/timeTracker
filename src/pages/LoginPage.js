@@ -2,8 +2,14 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+// redux
+import { useDispatch } from "react-redux";
+import { setUser } from "../features/createSlice/userSlice";
+
 function LoginPage() {
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,7 +34,9 @@ function LoginPage() {
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
-        // ...
+        // set user in redux
+        dispatch(setUser(user.email));
+        // go to main page
         navigate("/");
       })
       .catch((error) => {
