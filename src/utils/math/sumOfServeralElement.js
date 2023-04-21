@@ -1,6 +1,5 @@
 export const sumOfServeralElement = (tempArray) => {
   tempArray.reverse();
-  console.log("tempArray", tempArray);
   const last7DayData = [];
   for (let i = 0; i < 7; i++) {
     // if undefined then return 0

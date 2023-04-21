@@ -53,8 +53,9 @@ function DashboardPage() {
 
   const [completedTasks, setCompletedTasks] = useState(0);
   const [totalTimeTracked, setTotalTimeTracked] = useState("00:00:00");
-
-  const today = new Date().toISOString().slice(0, 10);
+  const [guideText, setGuideText] = useState(
+    "Click the button to change the graph data."
+  );
 
   const checkCompletedTasks = async () => {
     const auth = getAuth();
@@ -106,6 +107,9 @@ function DashboardPage() {
         checkTotalTimeTracked();
       } else {
         // No user is signed in.
+        setCompletedTasks(5);
+        setTotalTimeTracked("02:17:28");
+        setGuideText("Please login to see your dashboard.");
       }
     });
     tempOptions.xAxis.data = calculateLast7Days();
@@ -115,55 +119,54 @@ function DashboardPage() {
     <>
       <DashboardContainer>
         <DashboardTitle>Dashboard</DashboardTitle>
-      </DashboardContainer>
-      <DashboardCardContainer>
-        <DashboardCard>
-          <DashboardValue>{completedTasks}</DashboardValue>
-          <DashboardLabel>Completed Tasks</DashboardLabel>
-        </DashboardCard>
-        <DashboardCard>
-          <DashboardValue>{totalTimeTracked}</DashboardValue>
-          <DashboardLabel>Total Focus Time</DashboardLabel>
-        </DashboardCard>
-      </DashboardCardContainer>{" "}
-      <DashboardTitle>
-        Click the button to change the graph data.
-      </DashboardTitle>
-      <ButtonContainer>
-        <Button
-          variant="contained"
-          onClick={() => {
-            setOptions({
-              ...options,
-              series: [
-                {
-                  data: options.series[0].data,
-                  type: "line",
-                },
-              ],
-            });
-          }}
-        >
-          Line Chart
-        </Button>
-        <Button
-          variant="contained"
-          onClick={() => {
-            // just change the series data to bar chart
-            setOptions({
-              ...options,
-              series: [
-                {
-                  data: options.series[0].data,
-                  type: "bar",
-                },
-              ],
-            });
-          }}
-        >
-          Bar Chart
-        </Button>
-      </ButtonContainer>
+        <DashboardCardContainer>
+          <DashboardCard>
+            <DashboardValue>{completedTasks}</DashboardValue>
+            <DashboardLabel>Completed Tasks</DashboardLabel>
+          </DashboardCard>
+          <DashboardCard>
+            <DashboardValue>{totalTimeTracked}</DashboardValue>
+            <DashboardLabel>Total Focus Time</DashboardLabel>
+          </DashboardCard>
+        </DashboardCardContainer>
+
+        <DashboardTitle>{guideText}</DashboardTitle>
+        <ButtonContainer>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setOptions({
+                ...options,
+                series: [
+                  {
+                    data: options.series[0].data,
+                    type: "line",
+                  },
+                ],
+              });
+            }}
+          >
+            Line Chart
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => {
+              // just change the series data to bar chart
+              setOptions({
+                ...options,
+                series: [
+                  {
+                    data: options.series[0].data,
+                    type: "bar",
+                  },
+                ],
+              });
+            }}
+          >
+            Bar Chart
+          </Button>
+        </ButtonContainer>
+      </DashboardContainer>{" "}
       <ECharts
         option={options}
         opts={{ renderer: "svg", width: "auto", height: "auto" }}
