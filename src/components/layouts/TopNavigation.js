@@ -9,6 +9,7 @@ const TopNavigation = () => {
   const [isLogged, setIsLogged] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const [loadUser, setLoadUser] = useState(false);
 
   useEffect(() => {
     const viewPortWidth = window.innerWidth;
@@ -22,6 +23,7 @@ const TopNavigation = () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setIsLogged(true);
+        setLoadUser(true);
       } else {
         setIsLogged(false);
       }
@@ -33,6 +35,10 @@ const TopNavigation = () => {
     auth.signOut();
     navigate("/login");
   };
+
+  if (!loadUser) {
+    return <NavBar />;
+  }
 
   return (
     <NavBar>
@@ -78,6 +84,8 @@ const NavBar = styled.nav`
   padding: 1rem;
   background-color: #0077cc;
   color: #fff;
+
+  height: 2rem;
 
   @media (max-width: 768px) {
     flex-direction: column;
