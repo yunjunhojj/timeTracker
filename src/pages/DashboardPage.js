@@ -9,7 +9,12 @@ import { getAuth } from "firebase/auth";
 import ECharts, { EChartsReactProps } from "echarts-for-react";
 
 // utils
-import { calculateLast7Days, secondsToHms } from "../utils/math";
+import {
+  calculateLast7Days,
+  secondsToHms,
+  sumOfServeralElement,
+  sumOfAllElements,
+} from "../utils/math";
 
 function DashboardPage() {
   const [options, setOptions] = useState({
@@ -28,10 +33,12 @@ function DashboardPage() {
     ],
   });
 
+  const last7Days = calculateLast7Days();
+
   const tempOptions = {
     xAxis: {
       type: "category",
-      data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      data: last7Days,
     },
     yAxis: {
       type: "value",
@@ -82,40 +89,26 @@ function DashboardPage() {
         : tempArray.push(pomodoroCounter);
     }
 
-    // several arrays of tempArray
-    tempArray.reverse();
-    const last7DayData = [];
-    for (let i = 0; i < 7; i++) {
-      // if undefined then return 0
-      if (tempArray[i] === undefined) {
-        last7DayData[i] = 0;
-        continue;
-      }
-
-      // several elements sum in each array
-      last7DayData[i] = tempArray[i].reduce((acc, doc) => {
-        return (acc + doc) / 60;
-      });
-    }
+    const last7DayData = sumOfServeralElement(tempArray);
 
     tempOptions.series[0].data = last7DayData.reverse();
 
     setOptions(tempOptions);
-    const totalTime = secondsToHms(
-      tempArray.flat().reduce((acc, doc) => {
-        return acc + doc;
-      }, 0)
-    );
+    const totalTime = secondsToHms(sumOfAllElements(tempArray));
 
     setTotalTimeTracked(totalTime);
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      tempOptions.xAxis.data = calculateLast7Days();
-      checkCompletedTasks();
-      checkTotalTimeTracked();
-    }, 1000);
+    getAuth().onAuthStateChanged((user) => {
+      if (user) {
+        checkCompletedTasks();
+        checkTotalTimeTracked();
+      } else {
+        // No user is signed in.
+      }
+    });
+    tempOptions.xAxis.data = calculateLast7Days();
   }, []);
 
   return (

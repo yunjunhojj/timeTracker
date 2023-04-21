@@ -7,8 +7,6 @@ export const calculateLast7Days = () => {
     tempDate.setDate(tempDate.getDate() - i);
     last7Days.push(tempDate.toISOString().slice(5, 10));
   }
-  // reverse the array so that the date is in ascending order
-  last7Days.reverse();
 
   return last7Days;
 };
