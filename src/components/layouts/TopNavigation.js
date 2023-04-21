@@ -7,7 +7,7 @@ const TopNavigation = () => {
   const navigate = useNavigate();
 
   const [isLogged, setIsLogged] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
