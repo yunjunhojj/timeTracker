@@ -20,7 +20,7 @@
 위와 같이 6개의 페이지로 구성된 웹사이트를 만들 것을 기획하게 됐습니다. 
 
 # 개발 
-![image](https://user-images.githubusercontent.com/50473516/233766652-ec4b03ae-62d2-44dd-8d9d-0d0af6d9db5a.png)
+<img width="819" alt="image" src="https://user-images.githubusercontent.com/50473516/233766785-846810d8-fa3b-4e80-9d54-9d7ca619115b.png">
 
 ## 라이브러리 선정 
 1. 백엔드 : 빠른 개발 환경을 위해서 firebase를 사용했습니다. 오히려 이렇게 firebase를 사용하는 것이 Auth 관련해서 더욱 신뢰성 좋은 서비스라고 생각했습니다. 
@@ -43,8 +43,7 @@
 - useEffect 를 활용해서 1초마다 화면에 랜더링 되는 숫자를 변경시켜서 pomodoro를 구현했습니다. 한번의 focus time을 완료할 때마다 서버의 데이터를 저장하도록 구현했습니다.
 
 ## Todo 
-<img width="1439" alt="image" src="https://user-images.githubusercontent.com/50473516/233766182-78eabd4a-a230-4245-ac49-d7fcc7bbb112.png">
-
+<img width="1440" alt="image" src="https://user-images.githubusercontent.com/50473516/233766737-abeab20a-61aa-47b3-9295-5a4fc9176974.png">
 - 기본적인 todo list page 입니다. 특이사항은 없으며, todo의 상태를 redux로 관리하고 있습니다. 개인적인 생각으로는 react-query 같은 서버상태 관리로 구현하거나, context와 가벼운 상태관리 라이브러리를 사용하는 것이 더 좋다고 생각합니다. 
 
 ## Dashboard
