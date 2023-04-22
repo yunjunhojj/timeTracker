@@ -20,7 +20,7 @@
 위와 같이 6개의 페이지로 구성된 웹사이트를 만들 것을 기획하게 됐습니다. 
 
 # 개발 
-![image](https://user-images.githubusercontent.com/50473516/233766553-95c8f335-1e44-47a5-8efd-2e6936e48257.png)
+![image](https://user-images.githubusercontent.com/50473516/233766652-ec4b03ae-62d2-44dd-8d9d-0d0af6d9db5a.png)
 
 ## 라이브러리 선정 
 1. 백엔드 : 빠른 개발 환경을 위해서 firebase를 사용했습니다. 오히려 이렇게 firebase를 사용하는 것이 Auth 관련해서 더욱 신뢰성 좋은 서비스라고 생각했습니다. 
