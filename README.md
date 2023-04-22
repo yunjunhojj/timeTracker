@@ -52,7 +52,7 @@
 - 서버에 있는 데이터를 기반으로 데이터를 표현해줍니다. chart는 Echart 라이브러리를 사용해서 구현했습니다. 
 
 ## Timetable 
-<img width="1430" alt="image" src="https://user-images.githubusercontent.com/50473516/233766306-281e7948-78e7-4e7f-bfc6-c9d6e93b654d.png">
+<img width="1425" alt="image" src="https://user-images.githubusercontent.com/50473516/233767212-c9e95a7b-7f4a-4be8-a3a6-c09450eb436d.png">
 
 - mui를 사용해서 time table을 구현했습니다. 이를 통해 쉽게 반응형으로 구현할 수 있었습니다. (모바일 : 2열, 나머지 : 3열) 
 
