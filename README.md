@@ -1,70 +1,58 @@
-# Getting Started with Create React App
+## 배포 URL : https://time-tracker.site
+## Test Auth => ID : test@test.test, PW : testtest
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# 기획 
+> 요즘 취업 준비를 하면서 시간 관리가 안되는 것을 느끼고, 나에게 필요한 사이트를 직접 만들어 보자고 생각했습니다. 
 
-## Available Scripts
 
-In the project directory, you can run:
+1. 로그인 페이지: 이 페이지에서는 사용자가 자격 증명(사용자 이름/이메일 및 비밀번호)을 입력하여 앱에 로그인할 수 있어야 합니다. 이 기능을 위해 Firebase 인증 또는 Passport.js와 같은 인증 라이브러리를 사용할 수 있습니다.
 
-### `npm start`
+2. 가입 페이지: 이 페이지에서는 신규 사용자가 사용자 이름, 이메일 및 비밀번호와 같은 정보를 입력하여 계정을 만들 수 있습니다. 위에서 언급한 것과 동일한 인증 라이브러리를 사용하여 사용자 등록을 처리할 수 있습니다.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+3. 포모도로 타이머 페이지: 이 페이지에는 사용자가 작업 및 휴식 시간을 관리하는 데 사용할 수 있는 포모도로 타이머가 표시되어야 합니다. react-timer-hook 또는 react-pomodoro-timer와 같은 라이브러리를 사용하여 이 기능을 구현할 수 있습니다.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+4. 할 일 목록 페이지: 이 페이지에는 사용자가 완료해야 하는 작업 목록이 표시되어야 합니다. 사용자는 새 작업을 추가하고 작업을 완료된 것으로 표시하고 작업을 삭제할 수 있어야 합니다. react-beautiful-dnd 또는 react-sortablejs와 같은 라이브러리를 사용하여 끌어서 정렬할 수 있는 할 일 목록을 만들 수 있습니다.
 
-### `npm test`
+5. 대시보드 페이지: 이 페이지는 앱 내 사용자 활동의 개요를 표시해야 합니다. 여기에는 완료된 작업, 추적된 총 시간 및 기타 통계와 같은 정보가 포함될 수 있습니다. chart.js 또는 react-vis와 같은 라이브러리를 사용하여 데이터 시각화 차트를 표시할 수 있습니다.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+6. 타임테이블 페이지: 이 페이지에서는 사용자가 작업 및 활동에 대한 시간표를 만들 수 있습니다. 사용자는 새 작업을 추가하고, 시작 및 종료 시간을 설정하고, 작업을 편집하거나 삭제할 수 있어야 합니다. react-big-calendar 또는 react-week-calendar와 같은 라이브러리를 사용하여 사용자를 위한 맞춤형 캘린더를 만들 수 있습니다.
 
-### `npm run build`
+위와 같이 6개의 페이지로 구성된 웹사이트를 만들 것을 기획하게 됐습니다. 
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# 개발 
+![image](https://user-images.githubusercontent.com/50473516/233766553-95c8f335-1e44-47a5-8efd-2e6936e48257.png)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 라이브러리 선정 
+1. 백엔드 : 빠른 개발 환경을 위해서 firebase를 사용했습니다. 오히려 이렇게 firebase를 사용하는 것이 Auth 관련해서 더욱 신뢰성 좋은 서비스라고 생각했습니다. 
+2. 상태 관리 : 많은 상태관리가 필요하진 않아 context를 사용하려 했으나, 개인적 공부를 위해 redux toolkit을 사용해서 todo의 상태관리를 했습니다. 
+3. 프레임워크 : React(라이브러리)를 사용했습니다. SPA를 구현함으로써 사용자의 편의성을 높혀줄 것을 의도했습니다. 
+4. 사용된 라이브러리 : styled-component 와 mui 를 사용해서 css를 구성했습니다. echart를 사용해서 chart를 구현했습니다. 
+5. 배포 : firebase를 사용해서 배포하고, google analytics 를 연결해놨습니다. 
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+# 주요 페이지 
+## Auth 
+<img width="1439" alt="image" src="https://user-images.githubusercontent.com/50473516/233765993-7c491d8f-9069-4a47-8052-a19bcc1b46f5.png">
+<img width="1428" alt="image" src="https://user-images.githubusercontent.com/50473516/233766027-9c88eefa-33f8-4540-99e0-8817e2a5cfb7.png">
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- form 형태로 구성되어 있으며, 특이 사항은 없습니다.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Pomodoro 
+<img width="1439" alt="image" src="https://user-images.githubusercontent.com/50473516/233766083-10b8bc16-1728-4df1-b940-025891496094.png">
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- useEffect 를 활용해서 1초마다 화면에 랜더링 되는 숫자를 변경시켜서 pomodoro를 구현했습니다. 한번의 focus time을 완료할 때마다 서버의 데이터를 저장하도록 구현했습니다.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Todo 
+<img width="1439" alt="image" src="https://user-images.githubusercontent.com/50473516/233766182-78eabd4a-a230-4245-ac49-d7fcc7bbb112.png">
 
-## Learn More
+- 기본적인 todo list page 입니다. 특이사항은 없으며, todo의 상태를 redux로 관리하고 있습니다. 개인적인 생각으로는 react-query 같은 서버상태 관리로 구현하거나, context와 가벼운 상태관리 라이브러리를 사용하는 것이 더 좋다고 생각합니다. 
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Dashboard
+<img width="1430" alt="image" src="https://user-images.githubusercontent.com/50473516/233766256-3fad5f9c-eb97-4bb6-869b-cdd60d4d4554.png">
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- 서버에 있는 데이터를 기반으로 데이터를 표현해줍니다. chart는 Echart 라이브러리를 사용해서 구현했습니다. 
 
-### Code Splitting
+## Timetable 
+<img width="1430" alt="image" src="https://user-images.githubusercontent.com/50473516/233766306-281e7948-78e7-4e7f-bfc6-c9d6e93b654d.png">
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- mui를 사용해서 time table을 구현했습니다. 이를 통해 쉽게 반응형으로 구현할 수 있었습니다. (모바일 : 2열, 나머지 : 3열) 
